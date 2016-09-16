@@ -11,10 +11,54 @@ type Field struct {
 	over   bool
 }
 
+func edge(field Field, i int, j int) bool {
+	if i == 0 || i == 5 || j == 0 || j == 5 {
+		return true
+	}
+	return false
+}
+func canMoveLeft(field Field, i int, j int) bool {
+	if field.matrix[i][j] == field.matrix[i][j-1] && field.matrix[i][j] != 0 {
+		return true
+	}
+	return false
+}
+
+func canMoveRight(field Field, i int, j int) bool {
+	if field.matrix[i][j] == field.matrix[i][j+1] && field.matrix[i][j] != 0 {
+		return true
+	}
+	return false
+}
+func canMoveUp(field Field, i int, j int) bool {
+	if field.matrix[i][j] == field.matrix[i-1][j] && field.matrix[i][j] != 0 {
+		return true
+	}
+	return false
+}
+func canMoveDown(field Field, i int, j int) bool {
+	if field.matrix[i][j] == field.matrix[i+1][j] && field.matrix[i][j] != 0 {
+		return true
+	}
+	return false
+}
+
+func unmovable(field Field, i int, j int, current int) bool {
+	if current == 0 ||
+		field.matrix[i][j-1] == current ||
+		field.matrix[i-1][j] == current ||
+		field.matrix[i][j+1] == current ||
+		field.matrix[i+1][j] == current {
+		return false
+	}
+
+	return true
+}
+
 func show(field Field) {
 	for i := 0; i < 6; i++ {
 		for j := 0; j < 6; j++ {
-			if i == 0 || i == 5 || j == 0 || j == 5 {
+			if edge(field, i, j) {
 				fmt.Print("#\t")
 			} else if field.matrix[i][j] == 0 {
 				fmt.Print("\t")
@@ -31,11 +75,7 @@ func over(field Field) bool {
 	for i := 1; i < 5; i++ {
 		for j := 1; j < 5; j++ {
 			current := field.matrix[i][j]
-			if current == 0 ||
-				field.matrix[i][j-1] == current ||
-				field.matrix[i-1][j] == current ||
-				field.matrix[i][j+1] == current ||
-				field.matrix[i+1][j] == current {
+			if unmovable(field, i, j, current) == false {
 				return false
 			}
 		}
@@ -70,7 +110,7 @@ func left(field *Field) {
 			}
 		}
 		for j := 2; j < 5; j++ {
-			if field.matrix[i][j] == field.matrix[i][j-1] && field.matrix[i][j] != 0 {
+			if canMoveLeft(*field, i, j) {
 				field.matrix[i][j-1] = 2 * field.matrix[i][j-1]
 				field.score += field.matrix[i][j-1]
 				field.moved = true
@@ -95,7 +135,7 @@ func right(field *Field) {
 			}
 		}
 		for j := 3; j > 0; j-- {
-			if field.matrix[i][j] == field.matrix[i][j+1] && field.matrix[i][j] != 0 {
+			if canMoveRight(*field, i, j) {
 				field.matrix[i][j+1] = 2 * field.matrix[i][j+1]
 				field.score += field.matrix[i][j+1]
 				field.moved = true
@@ -120,7 +160,7 @@ func up(field *Field) {
 			}
 		}
 		for i := 2; i < 5; i++ {
-			if field.matrix[i][j] == field.matrix[i-1][j] && field.matrix[i][j] != 0 {
+			if canMoveUp(*field, i, j) {
 				field.matrix[i-1][j] = 2 * field.matrix[i-1][j]
 				field.score += field.matrix[i-1][j]
 				field.moved = true
@@ -146,7 +186,7 @@ func down(field *Field) {
 			}
 		}
 		for i := 3; i > 0; i-- {
-			if field.matrix[i][j] == field.matrix[i+1][j] && field.matrix[i][j] != 0 {
+			if canMoveDown(*field, i, j) {
 				field.matrix[i+1][j] = 2 * field.matrix[i+1][j]
 				field.score += field.matrix[i+1][j]
 				field.moved = true
@@ -162,7 +202,7 @@ func main() {
 	var x Field
 	fill(&x)
 	show(x)
-	right(&x)
+	up(&x)
 	show(x)
 
 }
