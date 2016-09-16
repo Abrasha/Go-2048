@@ -59,11 +59,11 @@ func show(field Field) {
 	for i := 0; i < 6; i++ {
 		for j := 0; j < 6; j++ {
 			if edge(field, i, j) {
-				fmt.Print("#\t")
+				fmt.Print("##\t")
 			} else if field.matrix[i][j] == 0 {
-				fmt.Print("\t")
+				fmt.Print("__\t")
 			} else {
-				fmt.Printf("%d\t", field.matrix[i][j])
+				fmt.Printf("%2d\t", field.matrix[i][j])
 			}
 		}
 		fmt.Println()
@@ -202,7 +202,6 @@ func main() {
 	var x Field
 	fill(&x)
 	show(x)
-	up(&x)
+	right(&x)
 	show(x)
-
 }
