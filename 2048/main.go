@@ -3,6 +3,8 @@ package main
 import "fmt"
 import "time"
 import "math/rand"
+import "bufio"
+import "os"
 
 const (
 	FIELD_HEIGHT = 6
@@ -11,6 +13,10 @@ const (
 	DIR_RIGHT    = 1
 	DIR_BOTTOM   = 2
 	DIR_LEFT     = 3
+	UP           = 'w'
+	RIRHT        = 'd'
+	DOWN         = 's'
+	LEFT         = 'a'
 )
 
 type Field struct {
@@ -250,10 +256,53 @@ func down(field *Field) {
 	}
 }
 
+func direct(field *Field, direction int) {
+	switch direction {
+	case DIR_TOP:
+		up(field)
+	case DIR_RIGHT:
+		right(field)
+	case DIR_BOTTOM:
+		down(field)
+	case DIR_LEFT:
+		left(field)
+	default:
+
+	}
+
+}
+
+func selectDirection() int { //Works only with enter! you can try to solve this problem
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	symb := rune([]byte(input)[0])
+	switch symb {
+	case UP:
+		return DIR_TOP
+	case RIRHT:
+		return DIR_RIGHT
+	case DOWN:
+		return DIR_BOTTOM
+	case LEFT:
+		return DIR_LEFT
+	default:
+		return -1
+	}
+}
+
 func main() {
 	var x Field
 	fill(&x)
 	show(x)
-	up(&x)
-	show(x)
+	for x.over == false {
+		direct(&x, selectDirection())
+		if x.moved == true {
+			generate(&x)
+			x.moved = false
+		}
+		//clean console here
+		show(x)
+
+	}
+
 }
