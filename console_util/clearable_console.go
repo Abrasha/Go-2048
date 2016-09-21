@@ -30,3 +30,7 @@ func CallClear() {
         panic("Your platform is unsupported! I can't clear terminal screen :(")
     }
 }
+
+func ExitProgram() {
+    os.Exit(0)
+}

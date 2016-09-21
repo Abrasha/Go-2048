@@ -1,11 +1,13 @@
 package main
 
-import "fmt"
-import "time"
-import "math/rand"
-import "bufio"
-import "os"
-import "Go-2048/console_util"
+import (
+	"fmt"
+	"time"
+	"math/rand"
+	"bufio"
+	"os"
+	"Go-2048/console_util"
+)
 
 const (
 	FIELD_HEIGHT = 6
@@ -18,6 +20,7 @@ const (
 	RIRHT        = 'd'
 	DOWN         = 's'
 	LEFT         = 'a'
+	KEY_EXIT	 = 'q'
 )
 
 type Field struct {
@@ -30,6 +33,12 @@ type Field struct {
 func clearScreen(){
 	console_util.CallClear()
 	fmt.Println("Go, go!\n")
+}
+
+func closeGame(){
+	fmt.Println("Bye bye")
+	os.Exit(3)
+	console_util.ExitProgram()
 }
 
 func isEdge(row int, col int) bool {
@@ -264,15 +273,15 @@ func down(field *Field) {
 
 func direct(field *Field, direction int) {
 	switch direction {
-		case DIR_TOP:
-			up(field)
-		case DIR_RIGHT:
-			right(field)
-		case DIR_BOTTOM:
-			down(field)
-		case DIR_LEFT:
-			left(field)
-		default:
+	case DIR_TOP:
+		up(field)
+	case DIR_RIGHT:
+		right(field)
+	case DIR_BOTTOM:
+		down(field)
+	case DIR_LEFT:
+		left(field)
+	default:
 
 	}
 
@@ -291,6 +300,9 @@ func selectDirection() int { //Works only with enter! you can try to solve this 
 		return DIR_BOTTOM
 	case LEFT:
 		return DIR_LEFT
+	case KEY_EXIT:
+		closeGame()
+		return -1
 	default:
 		return -1
 	}
