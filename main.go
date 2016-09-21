@@ -5,6 +5,7 @@ import "time"
 import "math/rand"
 import "bufio"
 import "os"
+import "Go-2048/console_util"
 
 const (
 	FIELD_HEIGHT = 6
@@ -300,7 +301,7 @@ func main() {
 			generate(&x)
 			x.moved = false
 		}
-		//clean console here
+		console_util.CallClear()
 		show(x)
 
 	}
