@@ -27,8 +27,13 @@ type Field struct {
 	over   bool
 }
 
+func clearScreen(){
+	console_util.CallClear()
+	fmt.Println("Go, go!\n")
+}
+
 func isEdge(row int, col int) bool {
-	if row == 0 || row == (FIELD_HEIGHT-1) || col == 0 || col == (FIELD_WIDTH-1) {
+	if row == 0 || row == (FIELD_HEIGHT - 1) || col == 0 || col == (FIELD_WIDTH - 1) {
 		return true
 	}
 	return false
@@ -61,10 +66,10 @@ func canMoveDown(field Field, row int, col int) bool {
 
 func unmovable(field Field, row int, col int, current int) bool {
 	if current == 0 ||
-		field.matrix[row][col-1] == current ||
-		field.matrix[row-1][col] == current ||
-		field.matrix[row][col+1] == current ||
-		field.matrix[row+1][col] == current {
+	field.matrix[row][col - 1] == current ||
+	field.matrix[row - 1][col] == current ||
+	field.matrix[row][col + 1] == current ||
+	field.matrix[row + 1][col] == current {
 		return false
 	}
 
@@ -84,12 +89,12 @@ func show(field Field) {
 		}
 		fmt.Println()
 	}
-	fmt.Println("score: ", field.score)
+	fmt.Println("Your score: ", field.score)
 }
 
 func over(field Field) bool {
-	for row := 1; row < 5; row++ {
-		for col := 1; col < 5; col++ {
+	for row := 1; row < FIELD_HEIGHT; row++ {
+		for col := 1; col < FIELD_WIDTH; col++ {
 			current := field.matrix[row][col]
 			if unmovable(field, row, col, current) == false {
 				return false
@@ -259,15 +264,15 @@ func down(field *Field) {
 
 func direct(field *Field, direction int) {
 	switch direction {
-	case DIR_TOP:
-		up(field)
-	case DIR_RIGHT:
-		right(field)
-	case DIR_BOTTOM:
-		down(field)
-	case DIR_LEFT:
-		left(field)
-	default:
+		case DIR_TOP:
+			up(field)
+		case DIR_RIGHT:
+			right(field)
+		case DIR_BOTTOM:
+			down(field)
+		case DIR_LEFT:
+			left(field)
+		default:
 
 	}
 
@@ -294,6 +299,7 @@ func selectDirection() int { //Works only with enter! you can try to solve this 
 func main() {
 	var x Field
 	fill(&x)
+	clearScreen()
 	show(x)
 	for x.over == false {
 		direct(&x, selectDirection())
@@ -301,9 +307,8 @@ func main() {
 			generate(&x)
 			x.moved = false
 		}
-		console_util.CallClear()
+		clearScreen()
 		show(x)
-
 	}
 
 }
