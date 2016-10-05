@@ -17,10 +17,10 @@ const (
 	DIR_BOTTOM   = 2
 	DIR_LEFT     = 3
 	UP           = 'w'
-	RIRHT        = 'd'
+	RIGHT        = 'd'
 	DOWN         = 's'
 	LEFT         = 'a'
-	KEY_EXIT	 = 'q'
+	KEY_EXIT     = 'q'
 )
 
 type Field struct {
@@ -30,12 +30,12 @@ type Field struct {
 	over   bool
 }
 
-func clearScreen(){
+func clearScreen() {
 	console_util.CallClear()
 	fmt.Println("Go, go!\n")
 }
 
-func closeGame(){
+func closeGame() {
 	fmt.Println("Bye bye")
 	os.Exit(3)
 	console_util.ExitProgram()
@@ -48,26 +48,26 @@ func isEdge(row int, col int) bool {
 	return false
 }
 func canMoveLeft(field Field, row int, col int) bool {
-	if field.matrix[row][col] == field.matrix[row][col-1] && field.matrix[row][col] != 0 {
+	if field.matrix[row][col] == field.matrix[row][col - 1] && field.matrix[row][col] != 0 {
 		return true
 	}
 	return false
 }
 
 func canMoveRight(field Field, row int, col int) bool {
-	if field.matrix[row][col] == field.matrix[row][col+1] && field.matrix[row][col] != 0 {
+	if field.matrix[row][col] == field.matrix[row][col + 1] && field.matrix[row][col] != 0 {
 		return true
 	}
 	return false
 }
 func canMoveUp(field Field, row int, col int) bool {
-	if field.matrix[row][col] == field.matrix[row-1][col] && field.matrix[row][col] != 0 {
+	if field.matrix[row][col] == field.matrix[row - 1][col] && field.matrix[row][col] != 0 {
 		return true
 	}
 	return false
 }
 func canMoveDown(field Field, row int, col int) bool {
-	if field.matrix[row][col] == field.matrix[row+1][col] && field.matrix[row][col] != 0 {
+	if field.matrix[row][col] == field.matrix[row + 1][col] && field.matrix[row][col] != 0 {
 		return true
 	}
 	return false
@@ -75,10 +75,10 @@ func canMoveDown(field Field, row int, col int) bool {
 
 func unmovable(field Field, row int, col int, current int) bool {
 	if current == 0 ||
-	field.matrix[row][col - 1] == current ||
-	field.matrix[row - 1][col] == current ||
-	field.matrix[row][col + 1] == current ||
-	field.matrix[row + 1][col] == current {
+		field.matrix[row][col - 1] == current ||
+		field.matrix[row - 1][col] == current ||
+		field.matrix[row][col + 1] == current ||
+		field.matrix[row + 1][col] == current {
 		return false
 	}
 
@@ -121,6 +121,7 @@ func fill(field *Field) {
 			}
 		}
 	}
+
 	generate(field)
 	generate(field)
 }
@@ -130,7 +131,7 @@ func countFreePositions(field *Field) []int {
 	for row := 1; row < 5; row++ {
 		for col := 1; col < 5; col++ {
 			if (*field).matrix[row][col] == 0 {
-				freePos = append(freePos, (row-1)*4+col)
+				freePos = append(freePos, (row - 1) * 4 + col)
 			}
 		}
 	}
@@ -169,12 +170,12 @@ func generate(field *Field) {
 	(*field).matrix[row][col] = generateValue()
 }
 
-func left(field *Field) {
+func (field *Field)left() {
 	for row := 1; row < 5; row++ {
 		for col := 2; col < 5; col++ {
 			if field.matrix[row][col] > 0 {
-				for field.matrix[row][col-1] == 0 {
-					field.matrix[row][col-1] = field.matrix[row][col]
+				for field.matrix[row][col - 1] == 0 {
+					field.matrix[row][col - 1] = field.matrix[row][col]
 					field.matrix[row][col] = 0
 					col--
 					field.moved = true
@@ -183,23 +184,23 @@ func left(field *Field) {
 		}
 		for j := 2; j < 5; j++ {
 			if canMoveLeft(*field, row, j) {
-				field.matrix[row][j-1] = 2 * field.matrix[row][j-1]
-				field.score += field.matrix[row][j-1]
+				field.matrix[row][j - 1] = 2 * field.matrix[row][j - 1]
+				field.score += field.matrix[row][j - 1]
 				field.moved = true
 				for k := j; k < 4; k++ {
-					field.matrix[row][k] = field.matrix[row][k+1]
+					field.matrix[row][k] = field.matrix[row][k + 1]
 				}
 				field.matrix[row][4] = 0
 			}
 		}
 	}
 }
-func right(field *Field) {
+func (field *Field)right() {
 	for i := 1; i < 5; i++ {
 		for j := 3; j > 0; j-- {
 			if field.matrix[i][j] > 0 {
-				for field.matrix[i][j+1] == 0 {
-					field.matrix[i][j+1] = field.matrix[i][j]
+				for field.matrix[i][j + 1] == 0 {
+					field.matrix[i][j + 1] = field.matrix[i][j]
 					field.matrix[i][j] = 0
 					j++
 					field.moved = true
@@ -208,23 +209,23 @@ func right(field *Field) {
 		}
 		for j := 3; j > 0; j-- {
 			if canMoveRight(*field, i, j) {
-				field.matrix[i][j+1] = 2 * field.matrix[i][j+1]
-				field.score += field.matrix[i][j+1]
+				field.matrix[i][j + 1] = 2 * field.matrix[i][j + 1]
+				field.score += field.matrix[i][j + 1]
 				field.moved = true
 				for k := j; k > 1; k-- {
-					field.matrix[i][k] = field.matrix[i][k-1]
+					field.matrix[i][k] = field.matrix[i][k - 1]
 				}
 				field.matrix[i][1] = 0
 			}
 		}
 	}
 }
-func up(field *Field) {
+func (field *Field)up() {
 	for j := 1; j < 5; j++ {
 		for i := 2; i < 5; i++ {
 			if field.matrix[i][j] > 0 {
-				for field.matrix[i-1][j] == 0 {
-					field.matrix[i-1][j] = field.matrix[i][j]
+				for field.matrix[i - 1][j] == 0 {
+					field.matrix[i - 1][j] = field.matrix[i][j]
 					field.matrix[i][j] = 0
 					i--
 					field.moved = true
@@ -233,11 +234,11 @@ func up(field *Field) {
 		}
 		for i := 2; i < 5; i++ {
 			if canMoveUp(*field, i, j) {
-				field.matrix[i-1][j] = 2 * field.matrix[i-1][j]
-				field.score += field.matrix[i-1][j]
+				field.matrix[i - 1][j] = 2 * field.matrix[i - 1][j]
+				field.score += field.matrix[i - 1][j]
 				field.moved = true
 				for k := i; k < 4; k++ {
-					field.matrix[k][j] = field.matrix[k+1][j]
+					field.matrix[k][j] = field.matrix[k + 1][j]
 				}
 				field.matrix[4][j] = 0
 			}
@@ -245,12 +246,12 @@ func up(field *Field) {
 	}
 }
 
-func down(field *Field) {
+func (field *Field)down() {
 	for j := 1; j < 5; j++ {
 		for i := 3; i > 0; i-- {
 			if field.matrix[i][j] > 0 {
-				for field.matrix[i+1][j] == 0 {
-					field.matrix[i+1][j] = field.matrix[i][j]
+				for field.matrix[i + 1][j] == 0 {
+					field.matrix[i + 1][j] = field.matrix[i][j]
 					field.matrix[i][j] = 0
 					i++
 					field.moved = true
@@ -259,11 +260,11 @@ func down(field *Field) {
 		}
 		for i := 3; i > 0; i-- {
 			if canMoveDown(*field, i, j) {
-				field.matrix[i+1][j] = 2 * field.matrix[i+1][j]
-				field.score += field.matrix[i+1][j]
+				field.matrix[i + 1][j] = 2 * field.matrix[i + 1][j]
+				field.score += field.matrix[i + 1][j]
 				field.moved = true
 				for k := i; k > 1; k-- {
-					field.matrix[k][j] = field.matrix[k-1][j]
+					field.matrix[k][j] = field.matrix[k - 1][j]
 				}
 				field.matrix[1][j] = 0
 			}
@@ -274,27 +275,28 @@ func down(field *Field) {
 func direct(field *Field, direction int) {
 	switch direction {
 	case DIR_TOP:
-		up(field)
+		field.up()
 	case DIR_RIGHT:
-		right(field)
+		field.right()
 	case DIR_BOTTOM:
-		down(field)
+		field.down()
 	case DIR_LEFT:
-		left(field)
+		field.left()
 	default:
 
 	}
 
 }
 
-func selectDirection() int { //Works only with enter! you can try to solve this problem
+func selectDirection() int {
+	//Works only with enter! you can try to solve this problem
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
 	symb := rune([]byte(input)[0])
 	switch symb {
 	case UP:
 		return DIR_TOP
-	case RIRHT:
+	case RIGHT:
 		return DIR_RIGHT
 	case DOWN:
 		return DIR_BOTTOM
