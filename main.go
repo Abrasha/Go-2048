@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"time"
-	"math/rand"
-	"bufio"
-	"os"
-	"Go-2048/console_util"
+"fmt"
+"strconv"
+"time"
+"math/rand"
+"bufio"
+"os"
+"Go-2048/console_util"
 )
 
 const (
@@ -32,7 +33,6 @@ type Field struct {
 
 func clearScreen() {
 	console_util.CallClear()
-	fmt.Println("Go, go!\n")
 }
 
 func closeGame() {
@@ -75,10 +75,10 @@ func canMoveDown(field Field, row int, col int) bool {
 
 func unmovable(field Field, row int, col int, current int) bool {
 	if current == 0 ||
-		field.matrix[row][col - 1] == current ||
-		field.matrix[row - 1][col] == current ||
-		field.matrix[row][col + 1] == current ||
-		field.matrix[row + 1][col] == current {
+	field.matrix[row][col - 1] == current ||
+	field.matrix[row - 1][col] == current ||
+	field.matrix[row][col + 1] == current ||
+	field.matrix[row + 1][col] == current {
 		return false
 	}
 
@@ -86,19 +86,25 @@ func unmovable(field Field, row int, col int, current int) bool {
 }
 
 func show(field Field) {
+	console_util.PrintlnColored("Go, go!", console_util.COLOR_CYAN)
+	console_util.PrintlnColored("(w - up | s - down | a - left | d - right | q - exit)\n", console_util.COLOR_WHITE)
 	for row := 0; row < FIELD_HEIGHT; row++ {
 		for col := 0; col < FIELD_WIDTH; col++ {
 			if isEdge(row, col) {
-				fmt.Print("##\t")
+				console_util.PrintColored("##  ",console_util.COLOR_RED)
 			} else if field.matrix[row][col] == 0 {
-				fmt.Print("__\t")
+				console_util.PrintNormal("__  ")
 			} else {
-				fmt.Printf("%2d\t", field.matrix[row][col])
+				console_util.PrintNormal(fmt.Sprintf("%2s  ", strconv.Itoa(field.matrix[row][col])))
 			}
 		}
 		fmt.Println()
 	}
-	fmt.Println("Your score: ", field.score)
+	console_util.PrintNormal("\nYour score: ")
+	console_util.PrintlnColored(strconv.Itoa(field.score), console_util.COLOR_YELLOW)
+
+	console_util.PrintColored("Yout turn: ", console_util.COLOR_CYAN)
+	console_util.PrintColored("", console_util.COLOR_GREEN)
 }
 
 func over(field Field) bool {
@@ -289,7 +295,7 @@ func direct(field *Field, direction int) {
 }
 
 func selectDirection() int {
-	//Works only with enter! you can try to solve this problem
+	//Works only with enter!
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
 	symb := rune([]byte(input)[0])
@@ -324,5 +330,4 @@ func main() {
 		clearScreen()
 		show(x)
 	}
-
 }
